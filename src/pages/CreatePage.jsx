@@ -46,7 +46,6 @@ function CreatePage() {
             onChange={(e) => setTitle(e.target.value)}
             className="bg-white text-primary p-3 outline-none rounded"
           />
-          {title}
         </div>
 
         <button
