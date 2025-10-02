@@ -1,9 +1,6 @@
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { toggleTask } from "../api/tasks";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteTask, toggleTask } from "../api/tasks";
+import DeleteIcon from "./DeleteIcon";
 
 function TaskCard({ task }) {
   const queryClient = useQueryClient();
@@ -13,24 +10,34 @@ function TaskCard({ task }) {
     onSuccess: queryClient.invalidateQueries(["tasks"]),
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: deleteTask,
+    onSuccess: queryClient.invalidateQueries(["tasks"]),
+  });
+
   return (
     <div
-      className={`${
-        task.completed ? "line-through" : ""
-      } w-lg mx-auto my-2 bg-primary text-white p-4 rounded shadow-sm flex justify-between items-center`}
+      className="w-lg mx-auto my-2 bg-primary text-white p-4 rounded shadow-sm flex justify-between items-center"
     >
-      <p>{task.title}</p>
+      <p className={ task.completed ? "line-through" : ""}>{task.title}</p>
 
-      {task.completed ? (
-        ""
-      ) : (
-        <button
-          onClick={() => toggleMutation.mutate(task.id)}
-          className="bg-green-500 p-2 rounded text-xs cursor-pointer"
-        >
-          { toggleMutation.isPending ? 'Loading...': 'Mark As Done' }
-        </button>
-      )}
+      <div className="flex items-center">
+        {task.completed ? (
+          ""
+        ) : (
+          <button
+            onClick={() => toggleMutation.mutate(task.id)}
+            className="bg-green-500 p-2 rounded text-xs cursor-pointer"
+          >
+            {toggleMutation.isPending ? "Loading..." : "Mark As Done"}
+          </button>
+        )}
+
+        <DeleteIcon
+          onClick={() => deleteMutation.mutate(task.id)}
+          className="text-red-500 cursor-pointer ml-2"
+        />
+      </div>
     </div>
   );
 }
